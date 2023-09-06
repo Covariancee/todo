@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xyz/screens/widgets/add_task.dart';
 import 'package:xyz/screens/widgets/connection_check.dart';
 import 'package:xyz/screens/widgets/custom_bottom_navigation_bar.dart';
 
@@ -31,7 +32,14 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              builder: (BuildContext context) {
+                return const AddTask();
+              },
+            );
+          },
           backgroundColor: Colors.deepPurple,
           child: const Icon(Icons.add),
         ),

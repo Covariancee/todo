@@ -1,0 +1,56 @@
+[
+  {
+    "id": 1,
+    "title": "Grocery",
+    "color": "#FF5733",
+    "icon": "Icons.shopping_cart"
+  },
+  {
+    "id": 2,
+    "title": "Work",
+    "color": "#3498DB",
+    "icon": "Icons.work"
+  },
+  {
+    "id": 3,
+    "title": "Home",
+    "color": "#27AE60",
+    "icon": "Icons.home"
+  },
+  {
+    "id": 4,
+    "title": "Personal",
+    "color": "#9B59B6",
+    "icon": "Icons.person"
+  },
+  {
+    "id": 5,
+    "title": "Health",
+    "color": "#E74C3C",
+    "icon": "Icons.favorite"
+  },
+  {
+    "id": 6,
+    "title": "School",
+    "color": "#F1C40F",
+    "icon": "Icons.school"
+  },
+  {
+    "id": 7,
+    "title": "Fitness",
+    "color": "#2ECC71",
+    "icon": "Icons.fitness_center"
+  },
+  {
+    "id": 8,
+    "title": "Finance",
+    "color": "#34495E",
+    "icon": "Icons.attach_money"
+  },
+  {
+    "id": 9,
+    "title": "Other",
+    "color": "#95A5A6",
+    "icon": "Icons.category"
+  }
+]
