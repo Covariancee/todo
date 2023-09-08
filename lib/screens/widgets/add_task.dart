@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:xyz/provider/add_task_controller.dart';
 import 'package:xyz/screens/widgets/category_picker.dart';
+import 'package:xyz/screens/widgets/priorty_picker.dart';
+import 'package:xyz/services/services.dart';
 
 class AddTask extends StatefulWidget {
   const AddTask({Key? key}) : super(key: key);
@@ -35,15 +37,15 @@ class _AddTaskState extends State<AddTask> {
                       label: Text('Task'),
                     ),
                     validator: taskValidator,
-                    controller: provider.descriptionController,
+                    controller: provider.taskController,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    maxLength: 32),
+                    maxLength: 20),
                 TextFormField(
                     decoration: const InputDecoration(
                       label: Text('Description'),
                     ),
                     validator: taskValidator,
-                    controller: provider.taskController,
+                    controller: provider.descriptionController,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     maxLength: 32),
                 Row(
@@ -53,7 +55,7 @@ class _AddTaskState extends State<AddTask> {
                       children: [
                         IconButton(
                           onPressed: () async {
-                            selectDateTime(context);
+                            provider.selectDateTime(context);
                           },
                           icon: const Icon(Icons.timer_outlined),
                         ),
@@ -69,13 +71,27 @@ class _AddTaskState extends State<AddTask> {
                           icon: const Icon(Icons.discount_outlined),
                         ),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return const PriorityPicker();
+                                });
+                          },
                           icon: const Icon(Icons.flag_outlined),
                         ),
                       ],
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        addTodo(
+                            provider.taskController.text,
+                            provider.descriptionController.text,
+                            provider.selectedPDateTime,
+                            provider.selectedCategory.title,
+                            provider.selectedPriority);
+                        Navigator.of(context).pop();
+                      },
                       icon: const Icon(Icons.send_outlined),
                     ),
                   ],

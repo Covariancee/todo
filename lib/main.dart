@@ -1,8 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:xyz/provider/auth_provider.dart';
-import 'package:xyz/provider/category_provider.dart';
+import 'package:xyz/provider/home_screen_provider.dart';
+import 'package:xyz/screens/auth/login_screen.dart';
+import 'package:xyz/screens/auth/splash_screen.dart';
 import 'package:xyz/screens/home_screen.dart';
 
 import 'firebase_options.dart';
@@ -17,7 +20,8 @@ void main() async {
     providers: [
       ListenableProvider<AuthProvider>(create: (_) => AuthProvider()),
       ListenableProvider<AddTaskProvider>(create: (_) => AddTaskProvider()),
-      ListenableProvider<CategoryProvider>(create: (_) => CategoryProvider()),
+      ListenableProvider<HomeScreenProvider>(
+          create: (_) => HomeScreenProvider()),
     ],
     child: const MyApp(),
   ));
@@ -29,13 +33,22 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const HomeScreen(),
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        home: StreamBuilder(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const SplashScreen();
+            }
 
-      ///to do giriş yapan kullanıcıyı her seferinde logine yönlendirme***
-    );
+            if (snapshot.hasData) {
+              return const HomeScreen();
+            }
+            return const LoginScreen();
+          },
+        ));
   }
 }

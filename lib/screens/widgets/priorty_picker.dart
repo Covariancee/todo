@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:xyz/screens/widgets/priorty_card.dart';
 
 import '../../provider/add_task_controller.dart';
-import 'category_card.dart';
 
-class CategoryPicker extends StatefulWidget {
-  const CategoryPicker({Key? key, required this.category}) : super(key: key);
-
-  final List category;
+class PriorityPicker extends StatefulWidget {
+  const PriorityPicker({
+    Key? key,
+  }) : super(key: key);
 
   @override
-  State<CategoryPicker> createState() => _CategoryPickerState();
+  State<PriorityPicker> createState() => _PriorityPickerState();
 }
 
-class _CategoryPickerState extends State<CategoryPicker> {
+class _PriorityPickerState extends State<PriorityPicker> {
+  final List priority = [1, 2, 3, 4, 5, 6];
   @override
   Widget build(BuildContext ctx) {
     return Consumer<AddTaskProvider>(
@@ -26,14 +27,10 @@ class _CategoryPickerState extends State<CategoryPicker> {
               },
               child: const Text('Cancel'),
             ),
-            TextButton(
-              onPressed: () {},
-              child: const Text('Add Category'),
-            )
           ],
           scrollable: true,
           title: const Text(
-            'Chose Category',
+            'Task priority',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           content: SizedBox(
@@ -47,12 +44,12 @@ class _CategoryPickerState extends State<CategoryPicker> {
                   childAspectRatio: 1,
                   crossAxisSpacing: 30,
                   mainAxisSpacing: 30),
-              itemCount: widget.category.length,
+              itemCount: priority.length,
               itemBuilder: (BuildContext ctx, int index) {
-                return CategoryCard(
-                  category: widget.category[index],
-                  onSelectCategory: () {
-                    provider.selectedCategory = widget.category[index];
+                return PriorityCard(
+                  priorty: priority[index],
+                  onSelectPriority: () {
+                    provider.selectedPriority = priority[index].toString();
                     Navigator.of(context).pop();
                   },
                 );

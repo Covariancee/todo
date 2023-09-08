@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../models/category.dart';
+import '../services/services.dart';
 
 class AddTaskProvider extends ChangeNotifier {
   AddTaskProvider() {
@@ -15,6 +17,15 @@ class AddTaskProvider extends ChangeNotifier {
   GlobalKey<FormState> formKeyTask = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyTime = GlobalKey<FormState>();
   List<Category> category = [];
+  Category selectedCategory = Category(id: 1, title: '', color: '', icon: '');
+  String selectedPriority = '0';
+  DateTime selectedPDateTime = DateTime.now();
+  String currentUsername = '';
+  void setCurrentUsername() async {
+    currentUsername =
+        await getUsernameFromUserId(FirebaseAuth.instance.currentUser!.uid);
+    notifyListeners();
+  }
 
   Future<void> init() async {
     String file = await rootBundle.loadString('assets/json/category.json');
@@ -22,7 +33,33 @@ class AddTaskProvider extends ChangeNotifier {
     category = jsonData
         .map((e) => Category.fromJson(e as Map<String, dynamic>))
         .toList();
-    print(category);
+  }
+
+  Future<void> selectDateTime(BuildContext context) async {
+    var selectedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(DateTime.now().year + 1),
+    );
+
+    if (selectedDate != null) {
+      var selectedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+      );
+      if (selectedTime != null) {
+        selectedDate = DateTime(
+          selectedDate.year,
+          selectedDate.month,
+          selectedDate.day,
+          selectedTime.hour,
+          selectedTime.minute,
+        );
+
+        selectedPDateTime = selectedDate;
+      }
+    }
   }
 }
 
@@ -40,28 +77,3 @@ dynamic taskValidator = (value) {
     return null;
   }
 };
-Future<void> selectDateTime(BuildContext context) async {
-  var selectedDate = await showDatePicker(
-    context: context,
-    initialDate: DateTime.now(),
-    firstDate: DateTime.now(),
-    lastDate: DateTime(DateTime.now().year + 1),
-  );
-
-  if (selectedDate != null) {
-    var selectedTime = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
-    if (selectedTime != null) {
-      selectedDate = DateTime(
-        selectedDate.year,
-        selectedDate.month,
-        selectedDate.day,
-        selectedTime.hour,
-        selectedTime.minute,
-      );
-      print("Seçilen Tarih ve Saat: $selectedDate");
-    }
-  }
-}
