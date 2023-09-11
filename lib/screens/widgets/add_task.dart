@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 import 'package:xyz/provider/add_task_controller.dart';
 import 'package:xyz/screens/widgets/category_picker.dart';
 import 'package:xyz/screens/widgets/priorty_picker.dart';
@@ -84,12 +85,24 @@ class _AddTaskState extends State<AddTask> {
                     ),
                     IconButton(
                       onPressed: () {
+                        provider.currentId = Uuid().v4();
                         addTodo(
-                            provider.taskController.text,
-                            provider.descriptionController.text,
-                            provider.selectedPDateTime,
-                            provider.selectedCategory.title,
-                            provider.selectedPriority);
+                          provider.taskController.text,
+                          provider.descriptionController.text,
+                          provider.selectedPDateTime,
+                          provider.selectedCategory.title,
+                          provider.selectedPriority,
+                          provider.selectedCategory.color,
+                          provider.selectedCategory.icon,
+                          provider.currentUsername,
+                          provider.currentId,
+                        );
+
+                        ///bunu fonksiyon haline getir burada çağır
+                        provider.taskController.text = '';
+                        provider.descriptionController.text = '';
+                        provider.selectedPDateTime = DateTime.now();
+
                         Navigator.of(context).pop();
                       },
                       icon: const Icon(Icons.send_outlined),

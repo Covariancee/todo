@@ -1,10 +1,12 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../models/category.dart';
+import '../models/task_detail.dart';
 import '../services/services.dart';
 
 class AddTaskProvider extends ChangeNotifier {
@@ -14,6 +16,7 @@ class AddTaskProvider extends ChangeNotifier {
 
   TextEditingController taskController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+  TextEditingController detailController = TextEditingController();
   GlobalKey<FormState> formKeyTask = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyTime = GlobalKey<FormState>();
   List<Category> category = [];
@@ -21,6 +24,9 @@ class AddTaskProvider extends ChangeNotifier {
   String selectedPriority = '0';
   DateTime selectedPDateTime = DateTime.now();
   String currentUsername = '';
+  List selectedTaskDetailList = [];
+  String currentId = '';
+
   void setCurrentUsername() async {
     currentUsername =
         await getUsernameFromUserId(FirebaseAuth.instance.currentUser!.uid);
@@ -33,6 +39,7 @@ class AddTaskProvider extends ChangeNotifier {
     category = jsonData
         .map((e) => Category.fromJson(e as Map<String, dynamic>))
         .toList();
+    setCurrentUsername();
   }
 
   Future<void> selectDateTime(BuildContext context) async {
@@ -60,6 +67,18 @@ class AddTaskProvider extends ChangeNotifier {
         selectedPDateTime = selectedDate;
       }
     }
+  }
+
+  Stream<List<TaskDetail>> getTaskDetail(String taskId) {
+    final stream = FirebaseFirestore.instance
+        .collection("todos")
+        .doc(taskId)
+        .collection("detail")
+        .snapshots();
+
+    return stream.map((event) => event.docs.map((doc) {
+          return TaskDetail.fromSnapshot(doc);
+        }).toList());
   }
 }
 

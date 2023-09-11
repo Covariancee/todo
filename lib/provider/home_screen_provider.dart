@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:xyz/models/task.dart';
 
 class HomeScreenProvider extends ChangeNotifier {
+  String id = '';
   Stream<List<Task>> getTask() {
     final stream = FirebaseFirestore.instance.collection('todos').snapshots();
 
@@ -11,5 +12,3 @@ class HomeScreenProvider extends ChangeNotifier {
         }).toList());
   }
 }
-
-

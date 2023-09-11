@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:xyz/provider/home_screen_provider.dart';
@@ -18,6 +19,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    getUsernameFromUserId(FirebaseAuth.instance.currentUser!.uid);
+  }
+
   @override
   Widget build(BuildContext context) {
     return ConnectionCheck(
@@ -47,13 +54,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             itemCount: task!.length,
                             itemBuilder: (BuildContext context, int index) {
                               return Dismissible(
-
-                                  ///dismissible çalışmıyor
-                                  key: Key(task[index].description),
+                                  key: Key(task[index].id),
                                   onDismissed: (direction) {
                                     if (direction ==
                                         DismissDirection.endToStart) {
-                                      deleteTodo('index');
+                                      deleteTodo(task[index].id);
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
                                         SnackBar(

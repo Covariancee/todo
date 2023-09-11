@@ -6,6 +6,10 @@ class Task {
   String priority;
   String task;
   DateTime timestamp;
+  String color;
+  String icon;
+  String owner;
+  String id;
 
   Task({
     required this.category,
@@ -13,6 +17,10 @@ class Task {
     required this.priority,
     required this.task,
     required this.timestamp,
+    required this.color,
+    required this.icon,
+    required this.owner,
+    required this.id,
   });
 
   factory Task.fromJson(Map<String, dynamic> json) {
@@ -22,6 +30,10 @@ class Task {
       priority: json['priority'] ?? '',
       task: json['task'] ?? '',
       timestamp: DateTime.parse(json['timestamp'] ?? ''),
+      color: 'color',
+      icon: 'icon',
+      owner: 'owner',
+      id: 'id',
     );
   }
 
@@ -46,6 +58,10 @@ class Task {
       timestamp: data?['timestamp'] != null
           ? (data!['timestamp'] as Timestamp).toDate()
           : DateTime.now(),
+      color: data?['color'],
+      icon: data?['icon'],
+      owner: data?['owner'],
+      id: data?['id'],
     );
   }
 }
