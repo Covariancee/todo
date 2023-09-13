@@ -6,13 +6,16 @@ class TaskDetail {
   DateTime timestamp;
   bool taskStatus;
   String id;
+  bool isDeleted;
 
-  TaskDetail(
-      {required this.taskDetail,
-      required this.description,
-      required this.timestamp,
-      required this.taskStatus,
-      required this.id});
+  TaskDetail({
+    required this.taskDetail,
+    required this.description,
+    required this.timestamp,
+    required this.taskStatus,
+    required this.id,
+    required this.isDeleted,
+  });
 
   factory TaskDetail.fromJson(Map<String, dynamic> json) {
     return TaskDetail(
@@ -21,6 +24,7 @@ class TaskDetail {
       timestamp: DateTime.parse(json['timestamp'] ?? ''),
       taskStatus: json['taskStatus'] ?? '',
       id: json['id'] ?? '',
+      isDeleted: json['isDeleted'],
     );
   }
 
@@ -45,6 +49,7 @@ class TaskDetail {
           : DateTime.now(),
       taskStatus: data?['taskStatus'] ?? false,
       id: data?['id'],
+      isDeleted: data?['isDeleted'] ?? false,
     );
   }
 }

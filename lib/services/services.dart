@@ -29,6 +29,7 @@ Future<void> addTodo(
   String icon,
   String owner,
   String id,
+  bool isDeleted,
 ) async {
   final DocumentReference todoDocument =
       FirebaseFirestore.instance.collection('todos').doc(id);
@@ -43,7 +44,20 @@ Future<void> addTodo(
     'icon': icon,
     'owner': owner,
     'id': id,
+    'isDeleted': isDeleted
   });
+}
+
+Future<void> softDeleteTodo(String todoId) async {
+  try {
+    await FirebaseFirestore.instance
+        .collection('todos')
+        .doc(todoId)
+        .update({'isDeleted': true});
+    print('Task Marked as Deleted: $todoId');
+  } catch (e) {
+    print('Failed to mark task as deleted: $e');
+  }
 }
 
 Future<void> deleteTodo(String todoId) async {
@@ -55,6 +69,34 @@ Future<void> deleteTodo(String todoId) async {
   }
 }
 
+Future<void> deleteTodoDetail(String todosId, String detailId) async {
+  try {
+    await FirebaseFirestore.instance
+        .collection('todos')
+        .doc(todosId)
+        .collection('detail')
+        .doc(detailId)
+        .delete();
+    print('Task detail Deleted: $detailId');
+  } catch (e) {
+    print('Failed to task detail delete: $e');
+  }
+}
+
+Future<void> softDeleteTodoDetail(String todosId, String detailId) async {
+  try {
+    await FirebaseFirestore.instance
+        .collection('todos')
+        .doc(todosId)
+        .collection('detail')
+        .doc(detailId)
+        .update({'isDeleted': true});
+    print('Task detail Deleted: $detailId');
+  } catch (e) {
+    print('Failed to task detail delete: $e');
+  }
+}
+
 Future<void> addDetail(
   String taskDetail,
   String description,
@@ -62,6 +104,7 @@ Future<void> addDetail(
   bool status,
   String todoId,
   String detailId,
+  bool isDeleted,
 ) async {
   final DocumentReference detailDocument = FirebaseFirestore.instance
       .collection('todos')
@@ -74,7 +117,8 @@ Future<void> addDetail(
     'description': description,
     'timestamp': time,
     'status': status,
-    'id': detailId
+    'id': detailId,
+    'isDeleted': isDeleted
   });
 }
 
@@ -104,4 +148,14 @@ Stream<List<TaskDetail>> getTaskDetail(String taskId) {
   return stream.map((event) => event.docs.map((doc) {
         return TaskDetail.fromSnapshot(doc);
       }).toList());
+}
+
+Future<void> updateTaskDetailStatus(
+    String taskId, String detailId, bool status) async {
+  await FirebaseFirestore.instance
+      .collection('todos')
+      .doc(taskId)
+      .collection('detail')
+      .doc(detailId)
+      .update({'status': status});
 }

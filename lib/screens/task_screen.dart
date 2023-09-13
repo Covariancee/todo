@@ -24,6 +24,57 @@ class _TaskScreenState extends State<TaskScreen> {
     return Consumer<AddTaskProvider>(
       builder: (context, provider, child) {
         return Scaffold(
+          floatingActionButton: TextButton(
+            onPressed: () {
+              detailID = const Uuid().v4();
+              showDialog(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                          actions: [
+                            TextButton(
+                                onPressed: () {
+                                  detailID = const Uuid().v4();
+                                  if (provider
+                                      .detailController.text.isNotEmpty) {
+                                    addDetail(
+                                      provider.detailController.text,
+                                      provider.descriptionController.text,
+                                      widget.task.timestamp,
+                                      false,
+                                      widget.task.id,
+                                      detailID,
+                                      false,
+                                    );
+                                    provider.detailController.text = '';
+                                  }
+                                },
+                                child: const Text('add more')),
+                            TextButton(
+                                onPressed: () {
+                                  if (provider
+                                      .detailController.text.isNotEmpty) {
+                                    addDetail(
+                                        provider.detailController.text,
+                                        provider.descriptionController.text,
+                                        widget.task.timestamp,
+                                        false,
+                                        widget.task.id,
+                                        detailID,
+                                        false);
+                                  }
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('add'))
+                          ],
+                          title: const Text('add to list'),
+                          content: TextFormField(
+                              validator: taskValidator,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              controller: provider.detailController)));
+            },
+            child: const Text('add'),
+          ),
           appBar: AppBar(
             title: Text(widget.task.task),
           ),
@@ -31,39 +82,6 @@ class _TaskScreenState extends State<TaskScreen> {
             child: Column(
               children: [
                 Text(widget.task.description),
-                TextButton(
-                  onPressed: () {
-                    detailID = const Uuid().v4();
-                    showDialog(
-                        context: context,
-                        builder: (ctx) => AlertDialog(
-                                actions: [
-                                  TextButton(
-                                      onPressed: () {
-                                        if (provider
-                                            .detailController.text.isNotEmpty) {
-                                          addDetail(
-                                            provider.detailController.text,
-                                            provider.descriptionController.text,
-                                            widget.task.timestamp,
-                                            false,
-                                            widget.task.id,
-                                            detailID,
-                                          );
-                                        }
-                                        Navigator.of(context).pop;
-                                      },
-                                      child: const Text('add'))
-                                ],
-                                title: const Text('add to list'),
-                                content: TextFormField(
-                                    validator: taskValidator,
-                                    autovalidateMode:
-                                        AutovalidateMode.onUserInteraction,
-                                    controller: provider.detailController)));
-                  },
-                  child: const Text('add'),
-                ),
                 SizedBox(
                   height: 400,
                   child: StreamBuilder(
@@ -92,9 +110,13 @@ class _TaskScreenState extends State<TaskScreen> {
                                         key: Key(taskDetail[index].id),
                                         onDismissed: (direction) {
                                           if (direction ==
-                                              DismissDirection.endToStart) {}
+                                              DismissDirection.endToStart) {
+                                            softDeleteTodoDetail(widget.task.id,
+                                                taskDetail[index].id);
+                                          }
                                         },
                                         child: TaskCheckbox(
+                                            task: widget.task,
                                             taskDetail: taskDetail[index]));
                                   }),
                             ),

@@ -74,6 +74,7 @@ class AddTaskProvider extends ChangeNotifier {
         .collection("todos")
         .doc(taskId)
         .collection("detail")
+        .where('isDeleted', isEqualTo: false)
         .snapshots();
 
     return stream.map((event) => event.docs.map((doc) {

@@ -8,10 +8,7 @@ class NoTaskScreen extends StatelessWidget {
     return const Center(
         child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text('What do you want to do today ?'),
-        Text('tab + to add your tasks')
-      ],
+      children: [Text('What do you want to do ?'), Text('tab add your tasks')],
     ));
   }
 }

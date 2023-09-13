@@ -10,6 +10,7 @@ class Task {
   String icon;
   String owner;
   String id;
+  bool isDeleted;
 
   Task({
     required this.category,
@@ -21,6 +22,7 @@ class Task {
     required this.icon,
     required this.owner,
     required this.id,
+    required this.isDeleted,
   });
 
   factory Task.fromJson(Map<String, dynamic> json) {
@@ -34,6 +36,7 @@ class Task {
       icon: 'icon',
       owner: 'owner',
       id: 'id',
+      isDeleted: json['isDeleted'] ?? false,
     );
   }
 
@@ -62,6 +65,7 @@ class Task {
       icon: data?['icon'],
       owner: data?['owner'],
       id: data?['id'],
+      isDeleted: data?['isDeleted'],
     );
   }
 }

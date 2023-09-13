@@ -5,8 +5,10 @@ import 'package:xyz/models/task.dart';
 class HomeScreenProvider extends ChangeNotifier {
   String id = '';
   Stream<List<Task>> getTask() {
-    final stream = FirebaseFirestore.instance.collection('todos').snapshots();
-
+    final stream = FirebaseFirestore.instance
+        .collection('todos')
+        .where('isDeleted', isEqualTo: false)
+        .snapshots();
     return stream.map((event) => event.docs.map((doc) {
           return Task.fromSnapshot(doc);
         }).toList());

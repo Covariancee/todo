@@ -58,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   onDismissed: (direction) {
                                     if (direction ==
                                         DismissDirection.endToStart) {
-                                      deleteTodo(task[index].id);
+                                      softDeleteTodo(task[index].id);
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
                                         SnackBar(

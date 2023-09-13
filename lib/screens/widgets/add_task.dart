@@ -96,6 +96,7 @@ class _AddTaskState extends State<AddTask> {
                           provider.selectedCategory.icon,
                           provider.currentUsername,
                           provider.currentId,
+                          false,
                         );
 
                         ///bunu fonksiyon haline getir burada çağır
